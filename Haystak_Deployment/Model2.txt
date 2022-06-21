@@ -1,0 +1,60 @@
+proc cas;
+   BuildModel / modeltable={name='DLNN1', replace=1} type = 'CNN';
+
+   /*INPUT Layer*/
+   AddLayer / model='DLNN1' name='data' 
+      layer={type='input' STD='STD' dropout=.05}; 
+	
+   /*FIRST HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='New_Layer_1' 
+      layer={type='FULLCONNECT' n=40 act='identity' init='xavier'  dropout=.05 } srcLayers={'data'};
+   AddLayer / model='DLNN1' name='BatchLayerNew1' 
+      layer={type='BATCHNORM' act='ELU'} srcLayers={'New_Layer_1'};
+ 
+   /*SECOND HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='HLayer1' 
+      layer={type='FULLCONNECT' n=30 act='ELU' init='xavier' } srcLayers={'BatchLayerNew1'};
+
+   /*THIRD HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='HLayer2' 
+      layer={type='FULLCONNECT' n=20 act='identity' init='xavier' includeBias=False} srcLayers={'HLayer1'};
+   AddLayer / model='DLNN1' name='BatchLayer2' 
+      layer={type='BATCHNORM' act='ELU'} srcLayers={'HLayer2'};
+
+   /*FOURTH HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='HLayer3' 
+      layer={type='FULLCONNECT' n=10 act='identity' init='xavier' includeBias=False } srcLayers={'BatchLayer2'};  
+   AddLayer / model='DLNN1' name='BatchLayer3' 
+      layer={type='BATCHNORM' act='ELU'} srcLayers={'HLayer3'};
+
+   /*FIFTH HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='HLayer4' 
+      layer={type='FULLCONNECT' n=5 act='identity' init='xavier' includeBias=False } srcLayers={'BatchLayer3'};  
+   AddLayer / model='DLNN1' name='BatchLayer4' 
+      layer={type='BATCHNORM' act='ELU'} srcLayers={'HLayer4'};
+
+   /*SIXTH HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='HLayer5' 
+      layer={type='FULLCONNECT' n=10 act='identity' init='xavier' includeBias=False } srcLayers={'BatchLayer4'};  
+   AddLayer / model='DLNN1' name='BatchLayer5' 
+      layer={type='BATCHNORM' act='ELU'} srcLayers={'HLayer5'};
+
+   /*SEVENTH HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='HLayer6' 
+      layer={type='FULLCONNECT' n=20 act='identity' init='xavier' includeBias=False} srcLayers={'BatchLayer5'};
+   AddLayer / model='DLNN1' name="BatchLayer6" 
+      layer={type='BATCHNORM' act='ELU'} srcLayers={'HLayer6'};
+
+   /*SEVENTH HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='HLayer7' 
+      layer={type='FULLCONNECT' n=30 act='identity' init='xavier' includeBias=False } srcLayers={'BatchLayer6'};     
+   AddLayer / model='DLNN1' name="BatchLayer7" 
+      layer={type='BATCHNORM' act='ELU'} srcLayers={'HLayer7'};
+	
+   /*EIGHTH HIDDEN LAYER*/
+   AddLayer / model='DLNN1' name='New_Layer_2' 
+      layer={type='FULLCONNECT' n=40 act='identity' init='xavier' includeBias=False dropout=.05 } srcLayers={'BatchLayer7'};     
+
+   AddLayer / model='DLNN1' name='outlayer' 
+      layer={type='output' act='softmax'} srcLayers={'New_Layer_2'};
+quit;
